@@ -20,4 +20,4 @@ This assumes the use of an **Oracle SQL DB** and the use of some PL/SQL IDE like
 You can also use VS Code with the [Oracle Developer Tools for VS Code (SQL and PLSQL)](https://marketplace.visualstudio.com/items?itemName=Oracle.oracledevtools) extension.
 
 ## Issues
-For any issues please create an issue in this repo
+For any issues please create an issue in this repo and I will try to respond promptly.
