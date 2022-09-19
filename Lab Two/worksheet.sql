@@ -1,19 +1,18 @@
 /*
 Ethan Zeronik
 CNIT372 Lab #2
-Estimated Time Spent: hrs
+Estimated Time Spent: 1.5hrs
 Late hours used: 0
 */
 
 -- NOTE: Question #1
-SELECT ip.PARTNUMBER, ip.PARTDESCRIPTION, ROUND(AVG(col.ORDERQUANTITY), 1)
-FROM INVENTORYPART ip
-INNER JOIN CUSTORDERLINE col
-    ON ip.PARTNUMBER = col.PARTNUMBER
-WHERE ip.CATEGORYID = 'ACCESS'
-GROUP BY ip.PARTNUMBER, ip.PARTDESCRIPTION
-ORDER BY AVG(col.ORDERQUANTITY) DESC;
-
+SELECT ip.partnumber, ip.partdescription, round (AVG (col.orderquantity) , 1)
+FROM inventorypart ip
+    INNER JOIN custorderline col
+    ON ip.partnumber = col.partnumber
+WHERE ip.categoryid = 'ACCESS'
+GROUP BY ip.partnumber, ip.partdescription
+ORDER BY AVG (col.orderquantity) DESC;
 /* Q1 Query Results
 PARTNUMBER,PARTDESCRIPTION,ROUND(AVG(COL.ORDERQUANTITY),1)
 MOD-001,PCI DATA/FAX/VOICE MODEM,8.3
@@ -31,14 +30,13 @@ MOD-004,PCI V.90 DATA/FAX/VOICE MODEM,1.6
 */
 
 -- NOTE: Question #2a
-SELECT TO_CHAR(co.ORDERDATE, 'MM'), TO_CHAR(co.ORDERDATE, 'YYYY'), ROUND(AVG(col.ORDERQUANTITY), 1)
-FROM CUSTORDER co
-INNER JOIN CUSTORDERLINE col
-    ON co.ORDERID = col.ORDERID
-WHERE col.PARTNUMBER = 'DVD-001'
-GROUP BY TO_CHAR(co.ORDERDATE, 'YYYY'), TO_CHAR(co.ORDERDATE, 'MM')
-ORDER BY TO_CHAR(co.ORDERDATE, 'YYYY'), TO_CHAR(co.ORDERDATE, 'MM');
-
+SELECT to_char (co.orderdate, 'MM') , to_char (co.orderdate, 'YYYY') , round (AVG (col.orderquantity) , 1)
+FROM custorder co
+    INNER JOIN custorderline col
+    ON co.orderid = col.orderid
+WHERE col.partnumber = 'DVD-001'
+GROUP BY to_char (co.orderdate, 'YYYY') , to_char (co.orderdate, 'MM')
+ORDER BY to_char (co.orderdate, 'YYYY') , to_char (co.orderdate, 'MM');
 /* Q2a Query Results
 TO_CHAR(CO.ORDERDATE,'MM'),TO_CHAR(CO.ORDERDATE,'YYYY'),ROUND(AVG(COL.ORDERQUANTITY),1)
 07,2010,1.5
@@ -57,15 +55,13 @@ The average rose, then dropped until FEB 2011 where it spiked.
 */
 
 -- NOTE: Question #3a
-SELECT TO_CHAR(co.ORDERDATE, 'MM-YYYY'), ROUND(SUM(col.ORDERQUANTITY), 1)
-FROM CUSTORDER co
-INNER JOIN CUSTORDERLINE col
-    ON co.ORDERID = col.ORDERID
-WHERE col.PARTNUMBER = 'DVD-001'
-GROUP BY TO_CHAR(co.ORDERDATE, 'MM-YYYY')
-ORDER BY TO_DATE(TO_CHAR(co.ORDERDATE, 'MM-YYYY'), 'MM-YYYY') ASC;
-
-
+SELECT to_char (co.orderdate, 'MM-YYYY') , round (SUM (col.orderquantity) , 1)
+FROM custorder co
+    INNER JOIN custorderline col
+    ON co.orderid = col.orderid
+WHERE col.partnumber = 'DVD-001'
+GROUP BY to_char (co.orderdate, 'MM-YYYY')
+ORDER BY to_date (to_char (co.orderdate, 'MM-YYYY') , 'MM-YYYY') ASC;
 /* Q3a Query Results
 TO_CHAR(CO.ORDERDATE,'MM-YYYY'),ROUND(SUM(COL.ORDERQUANTITY),1)
 07-2010,3
@@ -84,14 +80,13 @@ I would plan to stay low in stock until winter where I would stock more because 
 */
 
 -- NOTE: Question #4
-SELECT TO_CHAR(co.ORDERDATE, 'MM'), TO_CHAR(co.ORDERDATE, 'YYYY'), COUNT(co.ORDERID)
-FROM CUSTORDER co
-INNER JOIN CUSTORDERLINE col
-    ON co.ORDERID = col.ORDERID
-WHERE col.PARTNUMBER = 'DVD-001'
-GROUP BY TO_CHAR(co.ORDERDATE, 'YYYY'), TO_CHAR(co.ORDERDATE, 'MM')
-ORDER BY TO_CHAR(co.ORDERDATE, 'YYYY'), TO_CHAR(co.ORDERDATE, 'MM');
-
+SELECT to_char (co.orderdate, 'MM') , to_char (co.orderdate, 'YYYY') , COUNT (co.orderid)
+FROM custorder co
+    INNER JOIN custorderline col
+    ON co.orderid = col.orderid
+WHERE col.partnumber = 'DVD-001'
+GROUP BY to_char (co.orderdate, 'YYYY') , to_char (co.orderdate, 'MM')
+ORDER BY to_char (co.orderdate, 'YYYY') , to_char (co.orderdate, 'MM');
 /* Q4 Query Results
 TO_CHAR(CO.ORDERDATE,'MM'),TO_CHAR(CO.ORDERDATE,'YYYY'),COUNT(CO.ORDERID)
 07,2010,2
@@ -120,14 +115,13 @@ They agree with each other somewhat which increases our confidence.
 */
 
 -- NOTE: Question #6a
-SELECT co.ORDERID, sh.SHIPMENTID, ps.PACKAGENUMBER, ps.SHIPPEDDATE, sh.SHIPNAME, sh.SHIPADDRESS
-FROM CUSTORDER co
-INNER JOIN SHIPMENT sh
-    ON co.ORDERID = sh.ORDERID
-INNER JOIN PACKINGSLIP ps
-    ON sh.SHIPMENTID = ps.SHIPMENTID
-WHERE co.ORDERID = '2000000007';
-
+SELECT co.orderid, sh.shipmentid, ps.packagenumber, ps.shippeddate, sh.shipname, sh.shipaddress
+FROM custorder co
+    INNER JOIN shipment sh
+    ON co.orderid = sh.orderid
+    INNER JOIN packingslip ps
+    ON sh.shipmentid = ps.shipmentid
+WHERE co.orderid = '2000000007';
 /* Q6a Query Results
 ORDERID,SHIPMENTID,PACKAGENUMBER,SHIPPEDDATE,SHIPNAME,SHIPADDRESS
 2000000007,H003,1,05-JUL-10,Evelyn Cassens,6094 Pearson Ave.
@@ -141,13 +135,12 @@ The results shows each package relating to each shipment for the given order id.
 */
 
 -- NOTE: Question #7a
-SELECT c.CUSTLASTNAME || ', ' || c.CUSTFIRSTNAME, c.CUSTOMERID, co.ORDERID, c.COMPANYNAME
-FROM CUSTOMER c
-LEFT OUTER JOIN CUSTORDER co
-    ON c.CUSTOMERID = co.CUSTOMERID
-WHERE c.COMPANYNAME IS NULL
-    AND c.STATE = 'PA';
-
+SELECT c.custlastname || ', ' || c.custfirstname, c.customerid, co.orderid, c.companyname
+FROM customer c
+    LEFT OUTER JOIN custorder co
+    ON c.customerid = co.customerid
+WHERE c.companyname IS NULL
+    AND c.state = 'PA';
 /* Q7a Query Results
 C.CUSTLASTNAME||','||C.CUSTFIRSTNAME,CUSTOMERID,ORDERID,COMPANYNAME
 Wolfe, Thomas,I-300149,2000000497,
@@ -159,13 +152,12 @@ Kaleta, Don,I-300028,,
 */
 
 -- NOTE: Question #7b
-SELECT c.CUSTLASTNAME || ', ' || c.CUSTFIRSTNAME, c.CUSTOMERID, co.ORDERID, c.COMPANYNAME
-FROM CUSTORDER co
-RIGHT OUTER JOIN CUSTOMER c
-    ON co.CUSTOMERID = c.CUSTOMERID
-WHERE c.COMPANYNAME IS NULL
-    AND c.STATE = 'PA';
-
+SELECT c.custlastname || ', ' || c.custfirstname, c.customerid, co.orderid, c.companyname
+FROM custorder co
+    RIGHT OUTER JOIN customer c
+    ON co.customerid = c.customerid
+WHERE c.companyname IS NULL
+    AND c.state = 'PA';
 /* Q7b Query Results
 C.CUSTLASTNAME||','||C.CUSTFIRSTNAME,CUSTOMERID,ORDERID,COMPANYNAME
 Wolfe, Thomas,I-300149,2000000497,
@@ -177,12 +169,11 @@ Kaleta, Don,I-300028,,
 */
 
 -- NOTE: Question #8
-SELECT ip.PARTNUMBER, cat.CATEGORYNAME
-FROM INVENTORYPART ip
-FULL OUTER JOIN CATEGORY cat
-    ON ip.CATEGORYID = cat.CATEGORYID
-
-/* Q8 Query Results
+SELECT ip.partnumber, cat.categoryname
+FROM inventorypart ip
+    FULL OUTER JOIN category cat
+    ON ip.categoryid = cat.categoryid
+ /* Q8 Query Results
 PARTNUMBER,CATEGORYNAME
 ADT-001,Storage
 ADT-002,Cables
@@ -389,34 +380,31 @@ SP-002,Basics
 SP-003,Basics
 ,Tablets
 */
-
--- NOTE: Question #9a
-SELECT c.CUSTFIRSTNAME || ' ' || c.CUSTLASTNAME, c.CUSTOMERID, co.ORDERDATE, sh.SHIPMENTID, ps.PACKAGENUMBER, sh.SHIPNAME, ps.SHIPPEDDATE
-FROM CUSTOMER c
-FULL OUTER JOIN CUSTORDER co
-    ON c.CUSTOMERID = co.CUSTOMERID
-FULL OUTER JOIN SHIPMENT sh
-    ON co.ORDERID = sh.ORDERID
-FULL OUTER JOIN PACKINGSLIP ps
-    ON sh.SHIPMENTID = ps.SHIPMENTID
-WHERE co.ORDERID = '2001000807';
-
+ -- NOTE: Question #9a
+    SELECT c.custfirstname || ' ' || c.custlastname, c.customerid, co.orderdate, sh.shipmentid, ps.packagenumber, sh.shipname, ps.shippeddate
+    FROM customer c
+        FULL OUTER JOIN custorder co
+        ON c.customerid = co.customerid
+        FULL OUTER JOIN shipment sh
+        ON co.orderid = sh.orderid
+        FULL OUTER JOIN packingslip ps
+        ON sh.shipmentid = ps.shipmentid
+    WHERE co.orderid = '2001000807';
 /* Q9a Query Results
 C.CUSTFIRSTNAME||''||C.CUSTLASTNAME,CUSTOMERID,ORDERDATE,SHIPMENTID,PACKAGENUMBER,SHIPNAME,SHIPPEDDATE
 Cecil Scheetz,C-300003,31-MAR-11,H384,,Cecil Scheetz,
 */
 
 -- NOTE: Question #9b
-SELECT c.CUSTFIRSTNAME || ' ' || c.CUSTLASTNAME, c.CUSTOMERID, co.ORDERDATE, sh.SHIPMENTID, sh.SHIPNAME
-FROM CUSTOMER c
-RIGHT OUTER JOIN CUSTORDER co
-    ON c.CUSTOMERID = co.CUSTOMERID
-LEFT OUTER JOIN SHIPMENT sh
-    ON co.ORDERID = sh.ORDERID
-LEFT OUTER JOIN PACKINGSLIP ps
-    ON sh.SHIPMENTID = ps.SHIPMENTID
-WHERE ps.SHIPPEDDATE IS NULL;
-
+SELECT c.custfirstname || ' ' || c.custlastname, c.customerid, co.orderdate, sh.shipmentid, sh.shipname
+FROM customer c
+    RIGHT OUTER JOIN custorder co
+    ON c.customerid = co.customerid
+    LEFT OUTER JOIN shipment sh
+    ON co.orderid = sh.orderid
+    LEFT OUTER JOIN packingslip ps
+    ON sh.shipmentid = ps.shipmentid
+WHERE ps.shippeddate IS NULL;
 /* Q9b Query Results
 C.CUSTFIRSTNAME||''||C.CUSTLASTNAME,CUSTOMERID,ORDERDATE,SHIPMENTID,SHIPNAME
 Verna McGrew,I-300069,27-MAR-11,L257,Verna McGrew
@@ -440,13 +428,11 @@ Louise Cool,I-300044,13-MAR-11,M147,Louise Cool
 */
 
 -- NOTE: Question #10a
-SELECT CUSTOMERID
-FROM CUSTOMER
-WHERE STATE = 'PA'
-INTERSECT
-SELECT CUSTOMERID
-FROM CUSTORDER;
-
+SELECT customerid
+FROM customer
+WHERE state = 'PA' INTERSECT
+    SELECT customerid
+    FROM custorder;
 /* Q10a Query Results
 CUSTOMERID
 C-300006
@@ -456,27 +442,23 @@ I-300149
 */
 
 -- NOTE: Question #10b
-SELECT CUSTOMERID
-FROM CUSTOMER
-WHERE STATE = 'PA'
-MINUS
-SELECT CUSTOMERID
-FROM CUSTORDER;
-
+SELECT customerid
+FROM customer
+WHERE state = 'PA' MINUS
+    SELECT customerid
+    FROM custorder;
 /* Q10b Query Results
 CUSTOMERID
 I-300028
 */
 
 -- NOTE: Question #10c
-SELECT CUSTOMERID
-FROM CUSTOMER
-WHERE STATE = 'PA'
-INTERSECT
-SELECT CUSTOMERID
-FROM CUSTORDER
-WHERE ORDERDATE LIKE '%-11';
-
+SELECT customerid
+FROM customer
+WHERE state = 'PA' INTERSECT
+    SELECT customerid
+    FROM custorder
+    WHERE orderdate LIKE '%-11';
 /* Q10c Query Results
 CUSTOMERID
 C-300006
@@ -485,14 +467,12 @@ I-300149
 */
 
 -- NOTE: Question #10d
-SELECT CUSTOMERID
-FROM CUSTOMER
-WHERE STATE = 'PA'
-MINUS
-SELECT CUSTOMERID
-FROM CUSTORDER
-WHERE ORDERDATE LIKE '%-11';
-
+SELECT customerid
+FROM customer
+WHERE state = 'PA' MINUS
+    SELECT customerid
+    FROM custorder
+    WHERE orderdate LIKE '%-11';
 /* Q10d Query Results
 CUSTOMERID
 C-300062
@@ -500,13 +480,11 @@ I-300028
 */
 
 -- NOTE: Question #11a
-SELECT PARTNUMBER
-FROM INVENTORYPART
-WHERE CATEGORYID = 'CAB'
-INTERSECT
-SELECT PARTNUMBER
-FROM CUSTORDERLINE;
-
+SELECT partnumber
+FROM inventorypart
+WHERE categoryid = 'CAB' INTERSECT
+    SELECT partnumber
+    FROM custorderline;
 /* Q11a Query Results
 PARTNUMBER
 ADT-003
@@ -543,13 +521,11 @@ POW-003
 */
 
 -- NOTE: Question #11b
-SELECT PARTNUMBER
-FROM INVENTORYPART
-WHERE CATEGORYID = 'CAB'
-MINUS
-SELECT PARTNUMBER
-FROM CUSTORDERLINE;
-
+SELECT partnumber
+FROM inventorypart
+WHERE categoryid = 'CAB' MINUS
+    SELECT partnumber
+    FROM custorderline;
 /* Q11b Query Results
 PARTNUMBER
 ADT-002
@@ -560,16 +536,14 @@ POW-001
 */
 
 -- NOTE: Question #11c
-SELECT PARTNUMBER
-FROM INVENTORYPART
-WHERE CATEGORYID = 'CAB'
-INTERSECT
-SELECT PARTNUMBER
-FROM CUSTORDERLINE
-INNER JOIN CUSTORDER
-    ON CUSTORDERLINE.ORDERID = CUSTORDER.ORDERID
-WHERE CUSTORDER.ORDERDATE > TO_DATE('12/31/2009','MM/DD/YYYY');
-
+SELECT partnumber
+FROM inventorypart
+WHERE categoryid = 'CAB' INTERSECT
+    SELECT partnumber
+    FROM custorderline
+        INNER JOIN custorder
+        ON custorderline.orderid = custorder.orderid
+    WHERE custorder.orderdate > TO_DATE ('12/31/2009', 'MM/DD/YYYY');
 /* Q11c Query Results
 PARTNUMBER
 ADT-003
@@ -606,16 +580,14 @@ POW-003
 */
 
 -- NOTE: Question #11d
-SELECT PARTNUMBER
-FROM INVENTORYPART
-WHERE CATEGORYID = 'CAB'
-MINUS
-SELECT PARTNUMBER
-FROM CUSTORDERLINE
-INNER JOIN CUSTORDER
-    ON CUSTORDERLINE.ORDERID = CUSTORDER.ORDERID
-WHERE CUSTORDER.ORDERDATE > TO_DATE('12/31/2009','MM/DD/YYYY');
-
+SELECT partnumber
+FROM inventorypart
+WHERE categoryid = 'CAB' MINUS
+    SELECT partnumber
+    FROM custorderline
+        INNER JOIN custorder
+        ON custorderline.orderid = custorder.orderid
+    WHERE custorder.orderdate > TO_DATE ('12/31/2009', 'MM/DD/YYYY');
 /* Q11d Query Results
 PARTNUMBER
 ADT-002
@@ -626,14 +598,12 @@ POW-001
 */
 
 -- NOTE: Question #12a
-SELECT CUSTLASTNAME AS FIRSTNAME, CUSTLASTNAME AS LASTNAME
-FROM CUSTOMER
-WHERE STATE = 'FL'
-UNION
-SELECT FIRSTNAME, LASTNAME
-FROM EMPLOYEE
-ORDER BY FIRSTNAME, LASTNAME ASC;
-
+SELECT custlastname AS firstname, custlastname AS lastname
+FROM customer
+WHERE state = 'FL' UNION
+    SELECT firstname, lastname
+    FROM employee
+    ORDER BY firstname, lastname ASC;
 /* Q12a Query Results
 FIRSTNAME,LASTNAME
 Allison,Roland
@@ -691,14 +661,12 @@ Todd,Vigus
 */
 
 -- NOTE: Question #12b
-SELECT CUSTLASTNAME AS FIRSTNAME, CUSTLASTNAME AS LASTNAME
-FROM CUSTOMER
-WHERE STATE = 'FL'
-UNION ALL
-SELECT FIRSTNAME, LASTNAME
-FROM EMPLOYEE
-ORDER BY FIRSTNAME, LASTNAME ASC;
-
+SELECT custlastname AS firstname, custlastname AS lastname
+FROM customer
+WHERE state = 'FL' UNION ALL
+    SELECT firstname, lastname
+    FROM employee
+    ORDER BY firstname, lastname ASC;
 /* Q12b Query Results
 FIRSTNAME,LASTNAME
 Allison,Roland
@@ -756,20 +724,18 @@ Todd,Vigus
 */
 
 -- NOTE: Question #13a
-SELECT CUSTOMER.CUSTFIRSTNAME || ' ' || CUSTOMER.CUSTLASTNAME || ', residential', CUSTOMER.CUSTOMERID, CUSTORDER.ORDERID, CUSTORDER.ORDERDATE
-FROM CUSTOMER
-FULL OUTER JOIN CUSTORDER
-    ON CUSTOMER.CUSTOMERID = CUSTORDER.CUSTOMERID
-WHERE CUSTOMER.STATE = 'PA'
-    AND CUSTOMER.COMPANYNAME IS NULL
-UNION
-SELECT CUSTOMER.CUSTFIRSTNAME || ' ' || CUSTOMER.CUSTLASTNAME || ', ' || CUSTOMER.COMPANYNAME, CUSTOMER.CUSTOMERID, CUSTORDER.ORDERID, CUSTORDER.ORDERDATE
-FROM CUSTOMER
-FULL OUTER JOIN CUSTORDER
-    ON CUSTOMER.CUSTOMERID = CUSTORDER.CUSTOMERID
-WHERE CUSTOMER.STATE = 'PA'
-    AND CUSTOMER.COMPANYNAME IS NOT NULL;
-
+SELECT customer.custfirstname || ' ' || customer.custlastname || ', residential', customer.customerid, custorder.orderid, custorder.orderdate
+FROM customer
+    FULL OUTER JOIN custorder
+    ON customer.customerid = custorder.customerid
+WHERE customer.state = 'PA'
+    AND customer.companyname IS NULL UNION
+    SELECT customer.custfirstname || ' ' || customer.custlastname || ', ' || customer.companyname, customer.customerid, custorder.orderid, custorder.orderdate
+    FROM customer
+        FULL OUTER JOIN custorder
+        ON customer.customerid = custorder.customerid
+    WHERE customer.state = 'PA'
+        AND customer.companyname IS NOT NULL;
 /* Q13a Query Results
 CUSTOMER.CUSTFIRSTNAME||''||CUSTOMER.CUSTLASTNAME||',RESIDENTIAL',CUSTOMERID,ORDERID,ORDERDATE
 Don Kaleta, residential,I-300028,,
@@ -796,12 +762,11 @@ Thomas Wolfe, residential,I-300149,2001000768,20-MAR-11
 */
 
 -- NOTE: Question #13b
-SELECT CUSTOMER.CUSTFIRSTNAME || ' ' || CUSTOMER.CUSTLASTNAME || ', ' || NVL(CUSTOMER.COMPANYNAME,'residential'), CUSTOMER.CUSTOMERID, CUSTORDER.ORDERID, CUSTORDER.ORDERDATE
-FROM CUSTOMER
-FULL OUTER JOIN CUSTORDER
-    ON CUSTOMER.CUSTOMERID = CUSTORDER.CUSTOMERID
-WHERE CUSTOMER.STATE = 'PA';
-
+SELECT customer.custfirstname || ' ' || customer.custlastname || ', ' || nvl (customer.companyname, 'residential') , customer.customerid, custorder.orderid, custorder.orderdate
+FROM customer
+    FULL OUTER JOIN custorder
+    ON customer.customerid = custorder.customerid
+WHERE customer.state = 'PA';
 /* Q13b Query Results
 CUSTOMER.CUSTFIRSTNAME||''||CUSTOMER.CUSTLASTNAME||','||NVL(CUSTOMER.COMPANYNAME,'RESIDENTIAL'),CUSTOMERID,ORDERID,ORDERDATE
 Scott Gray, Security Installation,C-300062,2000000421,10-DEC-10
@@ -828,19 +793,21 @@ Don Kaleta, residential,I-300028,,
 */
 
 -- NOTE: Question #14a
-CREATE TABLE Lab2_Contact AS
-SELECT CUSTFIRSTNAME, last.CUSTLASTNAME, loc.CITY, loc.STATE
-FROM CUSTOMER
-CROSS JOIN (SELECT CUSTLASTNAME FROM CUSTOMER) last
-CROSS JOIN (SELECT CITY, STATE FROM CUSTOMER) loc;
-
+CREATE TABLE lab2_contact AS
+    SELECT custfirstname, last.custlastname, loc.city, loc.state
+    FROM customer cross
+        JOIN (
+            SELECT custlastname
+            FROM customer
+        ) last CROSS JOIN (
+            SELECT city, state
+            FROM customer
+        ) loc;
 -- NOTE: Question #14b
-SELECT COUNT(*)
-FROM Lab2_Contact;
-
-SELECT COUNT(DISTINCT CUSTFIRSTNAME), COUNT(DISTINCT CUSTLASTNAME), COUNT(DISTINCT CITY), COUNT(DISTINCT STATE)
-FROM Lab2_Contact;
-
+SELECT COUNT ( * )
+FROM lab2_contact;
+SELECT COUNT (DISTINCT custfirstname) , COUNT (DISTINCT custlastname) , COUNT (DISTINCT city) , COUNT (DISTINCT state)
+FROM lab2_contact;
 /* Q14b Query Results
 COUNT(*)
 12326391
