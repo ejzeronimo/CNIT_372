@@ -16,10 +16,9 @@ Late hours used: 0
 */
 
 -- NOTE: Question #2
-SELECT DISTINCT SUBSTR(phone,0,3) AS areaCode
+SELECT DISTINCT substr (phone, 0, 3) AS areacode
 FROM customer
 WHERE state = 'CO';
-
 /* Q2 Query Results
 AREACODE
 719
@@ -30,12 +29,11 @@ AREACODE
 */
 
 -- NOTE: Question #3
-SELECT SUBSTR(phone,0,3) AS areaCode, COUNT(*)
+SELECT substr (phone, 0, 3) AS areacode, COUNT ( * )
 FROM customer
 WHERE state = 'CO'
-GROUP BY SUBSTR(phone,0,3)
-ORDER BY COUNT(*) DESC;
-
+GROUP BY substr (phone, 0, 3)
+ORDER BY COUNT ( * ) DESC;
 /* Q3 Query Results
 AREACODE,COUNT(*)
 719,4
@@ -46,18 +44,16 @@ AREACODE,COUNT(*)
 */
 
 -- NOTE: Question #4
-SELECT SUBSTR(phone,0,3) AS areaCode
+SELECT substr (phone, 0, 3) AS areacode
 FROM customer
 WHERE state = 'CO'
-GROUP BY SUBSTR(phone,0,3)
-HAVING COUNT(*) = 
-(
-    SELECT MAX(COUNT(*)) 
-    FROM customer
-    WHERE state = 'CO'
-    GROUP BY SUBSTR(phone,0,3)
-);
-
+GROUP BY substr (phone, 0, 3)
+HAVING COUNT ( * ) = (
+        SELECT MAX (COUNT ( * ) )
+        FROM customer
+        WHERE state = 'CO'
+        GROUP BY substr (phone, 0, 3)
+    );
 /* Q4 Query Results
 AREACODE
 719
@@ -66,21 +62,18 @@ AREACODE
 -- NOTE: Question #5
 SELECT custlastname || ',' || custfirstname AS name, city, state, phone
 FROM customer
-WHERE state = 'CO' 
-AND SUBSTR(phone,0,3) = (
-    SELECT SUBSTR(phone,0,3) AS areaCode
-    FROM customer
-    WHERE state = 'CO'
-    GROUP BY SUBSTR(phone,0,3)
-    HAVING COUNT(*) = 
-    (
-        SELECT MAX(COUNT(*)) 
+WHERE state = 'CO' AND substr (phone, 0, 3) = (
+        SELECT substr (phone, 0, 3) AS areacode
         FROM customer
         WHERE state = 'CO'
-        GROUP BY SUBSTR(phone,0,3)
-    )
-);
-
+        GROUP BY substr (phone, 0, 3)
+        HAVING COUNT ( * ) = (
+                SELECT MAX (COUNT ( * ) )
+                FROM customer
+                WHERE state = 'CO'
+                GROUP BY substr (phone, 0, 3)
+            )
+    );
 /* Q5 Query Results
 NAME,CITY,STATE,PHONE
 Rodkey,Daniel,Lamar,CO,719-748-3205
@@ -95,11 +88,10 @@ We might want to know the most populus area code so that we can target that area
 */
 
 -- NOTE: Question #7
-SELECT customerid, COUNT(*)
+SELECT customerid, COUNT ( * )
 FROM custorder
 WHERE orderdate LIKE '%AUG-10'
 GROUP BY customerid;
-
 /* Q7 Query Results
 CUSTOMERID,COUNT(*)
 I-300070,1
@@ -171,48 +163,43 @@ I-300018,1
 */
 
 -- NOTE: Question #8
-SELECT MAX(COUNT(*))
+SELECT MAX (COUNT ( * ) )
 FROM custorder
 WHERE orderdate LIKE '%AUG-10'
 GROUP BY customerid;
-
 /* Q8 Query Results
 MAX(COUNT(*))
 3
 */
 
 -- NOTE: Question #9
-SELECT customerid, COUNT(*)
+SELECT customerid, COUNT ( * )
 FROM custorder
 WHERE orderdate LIKE '%AUG-10'
 GROUP BY customerid
-HAVING COUNT(*) = 
-    (
-        SELECT MAX(COUNT(*))
+HAVING COUNT ( * ) = (
+        SELECT MAX (COUNT ( * ) )
         FROM custorder
         WHERE orderdate LIKE '%AUG-10'
         GROUP BY customerid
     );
-
 /* Q9 Query Results
 CUSTOMERID,COUNT(*)
 C-300006,3
 */
 
 -- NOTE: Question #10
-SELECT customerid, COUNT(*)
+SELECT customerid, COUNT ( * )
 FROM custorder
 WHERE orderdate LIKE '%AUG-10'
 GROUP BY customerid
-HAVING COUNT(*) > 
-    (
-        SELECT AVG(COUNT(*))
+HAVING COUNT ( * ) > (
+        SELECT AVG (COUNT ( * ) )
         FROM custorder
         WHERE orderdate LIKE '%AUG-10'
         GROUP BY customerid
     )
-ORDER BY COUNT(*) DESC;
-
+ORDER BY COUNT ( * ) DESC;
 /* Q10 Query Results
 CUSTOMERID,COUNT(*)
 C-300006,3
@@ -228,19 +215,17 @@ I-300014,2
 */
 
 -- NOTE: Question #11
-SELECT customerid, COUNT(*)
+SELECT customerid, COUNT ( * )
 FROM custorder
 WHERE orderdate LIKE '%AUG-10'
 GROUP BY customerid
-HAVING COUNT(*) < 
-    (
-        SELECT AVG(COUNT(*))
+HAVING COUNT ( * ) < (
+        SELECT AVG (COUNT ( * ) )
         FROM custorder
         WHERE orderdate LIKE '%AUG-10'
         GROUP BY customerid
     )
-ORDER BY COUNT(*) ASC;
-
+ORDER BY COUNT ( * ) ASC;
 /* Q11 Query Results
 CUSTOMERID,COUNT(*)
 I-300070,1
@@ -307,13 +292,11 @@ A business might want to know this info to decide who gets promos or coupons. It
 */
 
 -- NOTE: Question #13
-SELECT custorder.customerid, customer.companyname, customer.custlastname || ', ' || customer.custfirstname AS name, TO_CHAR(custorder.orderdate , 'MM.DD.YYYY') AS "date"
+SELECT custorder.customerid, customer.companyname, customer.custlastname || ', ' || customer.custfirstname AS name, to_char (custorder.orderdate, 'MM.DD.YYYY') AS "date"
 FROM custorder
-INNER JOIN customer
+    INNER JOIN customer
     ON custorder.customerid = customer.customerid
-WHERE custorder.orderdate LIKE '%10'
-AND customer.state = 'IN';
-
+WHERE custorder.orderdate LIKE '%10' AND customer.state = 'IN';
 /* Q13 Query Results
 CUSTOMERID,COMPANYNAME,NAME,date
 I-300147,,Yaun,Steven,12.07.2010
@@ -326,13 +309,12 @@ C-300001,Baker and Company,Abbott,Gregory,12.02.2010
 */
 
 -- NOTE: Question #14
-SELECT custorder.customerid, customer.companyname, customer.custtitle || '. ' || SUBSTR(customer.custfirstname, 0 , 1) || '. ' || customer.custlastname  AS name, custorder.orderdate, custorder.requireddate
+SELECT custorder.customerid, customer.companyname, customer.custtitle || '. ' || substr (customer.custfirstname, 0, 1) || '. ' || customer.custlastname AS name, custorder.orderdate, custorder.requireddate
 FROM custorder
-INNER JOIN customer
+    INNER JOIN customer
     ON custorder.customerid = customer.customerid
 WHERE custorder.customerid = 'C-300001'
 ORDER BY custorder.orderdate DESC;
-
 /* Q14 Query Results
 CUSTOMERID,COMPANYNAME,NAME,ORDERDATE,REQUIREDDATE
 C-300001,Baker and Company,Mr.. G. Abbott,10-MAR-11,15-MAR-11
@@ -347,15 +329,14 @@ C-300001,Baker and Company,Mr.. G. Abbott,08-JUL-10,12-JUL-10
 -- NOTE: Question #15
 SELECT co.orderid, col.partnumber, ip.partdescription, col.unitprice, col.orderquantity, cat.categoryname
 FROM custorder co
-INNER JOIN custorderline col
+    INNER JOIN custorderline col
     ON co.orderid = col.orderid
-INNER JOIN inventorypart ip
+    INNER JOIN inventorypart ip
     ON col.partnumber = ip.partnumber
-INNER JOIN category cat
+    INNER JOIN category cat
     ON ip.categoryid = cat.categoryid
 WHERE ip.partdescription = 'BOARD GAMES'
-ORDER BY col.orderquantity DESC
-
+ORDER BY col.orderquantity DESC;
 /* Q15 Query Results
 ORDERID,PARTNUMBER,PARTDESCRIPTION,UNITPRICE,ORDERQUANTITY,CATEGORYNAME
 2001000536,SFT-005,BOARD GAMES,9.99,15,Software
@@ -377,18 +358,16 @@ ORDERID,PARTNUMBER,PARTDESCRIPTION,UNITPRICE,ORDERQUANTITY,CATEGORYNAME
 -- NOTE: Question #16
 SELECT co.orderid, ip.partnumber, ip.partdescription, col.unitprice, col.orderquantity
 FROM custorder co
-INNER JOIN customer c
+    INNER JOIN customer c
     ON co.customerid = c.customerid
-INNER JOIN custorderline col
+    INNER JOIN custorderline col
     ON co.orderid = col.orderid
-INNER JOIN inventorypart ip
+    INNER JOIN inventorypart ip
     ON col.partnumber = ip.partnumber
-INNER JOIN category cat
+    INNER JOIN category cat
     ON ip.categoryid = cat.categoryid
-WHERE co.customerid = 'C-300001'
-    AND co.orderdate = '14-JUL-10'
+WHERE co.customerid = 'C-300001' AND co.orderdate = '14-JUL-10'
 ORDER BY col.orderquantity DESC;
-
 /* Q16 Query Results
 ORDERID,PARTNUMBER,PARTDESCRIPTION,UNITPRICE,ORDERQUANTITY
 2000000032,BRK-011,2ND PARALLEL PORT,5.99,20
@@ -398,20 +377,18 @@ ORDERID,PARTNUMBER,PARTDESCRIPTION,UNITPRICE,ORDERQUANTITY
 */
 
 -- NOTE: Question #17
-SELECT TO_CHAR(co.orderdate , 'MM.DD.YYYY') AS "date", co.orderid, ip.partnumber, ip.partdescription, col.unitprice, col.orderquantity
+SELECT to_char (co.orderdate, 'MM.DD.YYYY') AS "date", co.orderid, ip.partnumber, ip.partdescription, col.unitprice, col.orderquantity
 FROM custorder co
-INNER JOIN customer c
+    INNER JOIN customer c
     ON co.customerid = c.customerid
-INNER JOIN custorderline col
+    INNER JOIN custorderline col
     ON co.orderid = col.orderid
-INNER JOIN inventorypart ip
+    INNER JOIN inventorypart ip
     ON col.partnumber = ip.partnumber
-INNER JOIN category cat
+    INNER JOIN category cat
     ON ip.categoryid = cat.categoryid
-WHERE c.companyname = 'Bankruptcy Help'
-    AND co.orderdate LIKE '%11'
+WHERE c.companyname = 'Bankruptcy Help' AND co.orderdate LIKE '%11'
 ORDER BY co.orderdate DESC, col.orderquantity DESC;
-
 /* Q17 Query Results
 date,ORDERID,PARTNUMBER,PARTDESCRIPTION,UNITPRICE,ORDERQUANTITY
 03.22.2011,2001000778,BRK-002,1X4 USB CABLE AND BRACKET,9.99,20
@@ -426,20 +403,18 @@ date,ORDERID,PARTNUMBER,PARTDESCRIPTION,UNITPRICE,ORDERQUANTITY
 */
 
 -- NOTE: Question #18
-SELECT TO_CHAR(co.orderdate , 'MM.DD.YYYY') AS "date", co.orderid, ip.partnumber, ip.partdescription, (col.unitprice * col.orderquantity) AS lineItemTotal
+SELECT to_char (co.orderdate, 'MM.DD.YYYY') AS "date", co.orderid, ip.partnumber, ip.partdescription, (col.unitprice * col.orderquantity) AS lineitemtotal
 FROM custorder co
-INNER JOIN customer c
+    INNER JOIN customer c
     ON co.customerid = c.customerid
-INNER JOIN custorderline col
+    INNER JOIN custorderline col
     ON co.orderid = col.orderid
-INNER JOIN inventorypart ip
+    INNER JOIN inventorypart ip
     ON col.partnumber = ip.partnumber
-INNER JOIN category cat
+    INNER JOIN category cat
     ON ip.categoryid = cat.categoryid
-WHERE c.companyname = 'Bankruptcy Help'
-    AND co.orderdate LIKE '%11'
+WHERE c.companyname = 'Bankruptcy Help' AND co.orderdate LIKE '%11'
 ORDER BY co.orderdate DESC, col.orderquantity DESC;
-
 /* Q18 Query Results
 date,ORDERID,PARTNUMBER,PARTDESCRIPTION,LINEITEMTOTAL
 03.22.2011,2001000778,BRK-002,1X4 USB CABLE AND BRACKET,199.8
@@ -454,15 +429,13 @@ date,ORDERID,PARTNUMBER,PARTDESCRIPTION,LINEITEMTOTAL
 */
 
 -- NOTE: Question #19
-SELECT c.customerid, c.companyname, c.custlastname || ', ' || c.custfirstname AS "name", COUNT(co.orderid)
+SELECT c.customerid, c.companyname, c.custlastname || ', ' || c.custfirstname AS "name", COUNT (co.orderid)
 FROM customer c
-INNER JOIN custorder co
+    INNER JOIN custorder co
     ON c.customerid = co.customerid
-WHERE co.orderdate LIKE '%JAN-11'
-AND c.state = 'IN'
+WHERE co.orderdate LIKE '%JAN-11' AND c.state = 'IN'
 GROUP BY c.customerid, c.companyname, c.custlastname, c.custfirstname
-ORDER BY COUNT(co.orderid) ASC
-
+ORDER BY COUNT (co.orderid) ASC;
 /* Q19 Query Results
 CUSTOMERID,COMPANYNAME,name,COUNT(CO.ORDERID)
 C-300001,Baker and Company,Abbott, Gregory,1
@@ -471,13 +444,12 @@ I-300030,,Quintero, Eric,2
 */
 
 -- NOTE: Question #20
-SELECT cat.categoryname, ROUND(AVG(ip.stocklevel),2)
+SELECT cat.categoryname, round (AVG (ip.stocklevel) , 2)
 FROM category cat
-INNER JOIN inventorypart ip
+    INNER JOIN inventorypart ip
     ON cat.categoryid = ip.categoryid
 GROUP BY cat.categoryname
-ORDER BY AVG(ip.stocklevel) ASC
-
+ORDER BY AVG (ip.stocklevel) ASC;
 /* Q20 Query Results
 CATEGORYNAME,ROUND(AVG(IP.STOCKLEVEL),2)
 Computers,2.45
@@ -491,13 +463,12 @@ Cables,35.86
 */
 
 -- NOTE: Question #21
-SELECT cat.categoryname || ': ' || cat.description as categorydetail, COUNT(ip.partnumber) 
+SELECT cat.categoryname || ': ' || cat.description AS categorydetail, COUNT (ip.partnumber)
 FROM category cat
-INNER JOIN inventorypart ip
+    INNER JOIN inventorypart ip
     ON cat.categoryid = ip.categoryid
 GROUP BY cat.categoryname, cat.description
-ORDER BY COUNT(ip.partnumber) ASC
-
+ORDER BY COUNT (ip.partnumber) ASC;
 /* Q21 Query Results
 CATEGORYDETAIL,COUNT(IP.PARTNUMBER)
 Power: Power Supplies,4
@@ -511,26 +482,24 @@ Basics: Casing, Barebone, Monitors, Keyboards, Mice,44
 */
 
 -- NOTE: Question #22
-SELECT MAX(ip.weight)
+SELECT MAX (ip.weight)
 FROM inventorypart ip
-INNER JOIN category cat
+    INNER JOIN category cat
     ON ip.categoryid = cat.categoryid
-WHERE cat.categoryname = 'Software'
-
+WHERE cat.categoryname = 'Software';
 /* Q22 Query Results
 MAX(IP.WEIGHT)
 0.438
 */
 
 -- NOTE: Question #23
-SELECT cat.categoryname, MAX(ip.weight)
+SELECT cat.categoryname, MAX (ip.weight)
 FROM inventorypart ip
-INNER JOIN category cat
+    INNER JOIN category cat
     ON ip.categoryid = cat.categoryid
-WHERE cat.categoryname IN ('Power','Software','Storage')
+WHERE cat.categoryname IN ('Power', 'Software', 'Storage')
 GROUP BY cat.categoryname
-ORDER BY cat.categoryname ASC
-
+ORDER BY cat.categoryname ASC;
 /* Q23 Query Results
 CATEGORYNAME,MAX(IP.WEIGHT)
 Power,3
@@ -539,14 +508,13 @@ Storage,4
 */
 
 -- NOTE: Question #24
-SELECT cat.categoryname, MAX(ip.weight), MAX(ip.partdescription)
+SELECT cat.categoryname, MAX (ip.weight) , MAX (ip.partdescription)
 FROM inventorypart ip
-INNER JOIN category cat
+    INNER JOIN category cat
     ON ip.categoryid = cat.categoryid
-WHERE cat.categoryname IN ('Power','Software','Storage')
+WHERE cat.categoryname IN ('Power', 'Software', 'Storage')
 GROUP BY cat.categoryname
-ORDER BY cat.categoryname ASC
-
+ORDER BY cat.categoryname ASC;
 /* Q24 Query Results
 CATEGORYNAME,MAX(IP.WEIGHT),MAX(IP.PARTDESCRIPTION)
 Power,3,300 WATT PS/2 POWER SUPPLY
