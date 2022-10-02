@@ -196,7 +196,6 @@ BEGIN
     dbms_output.put_line ('');
 END;
 /
-
 -- NOTE: Question #5b
 /*
 Enter value for MY_COUNT: 
@@ -211,14 +210,13 @@ DECLARE
     my_counter INTEGER := 1;
     my_number  INTEGER;
 BEGIN
-    FOR my_counter in 1 .. my_count LOOP
+    FOR my_counter IN 1..my_count LOOP
         my_number := dbms_random.value (1, my_count);
         dbms_output.put (my_number || ', ');
     END LOOP;
     dbms_output.put_line ('');
 END;
 /
-
 -- NOTE: Question #6b
 /*
 Enter value for MY_COUNT: 
@@ -229,70 +227,95 @@ Enter value for MY_COUNT:
 
 -- NOTE: DEBUG: TABLE 2
 
--- TODO: Question #1a
-
+-- NOTE: Question #1a
+CREATE OR REPLACE PROCEDURE hello_world AS
+    v_output VARCHAR2 (35) := 'Hello World';
+BEGIN
+    dbms_output.put_line (v_output);
+END hello_world;
+/
 /* Question #1a Query Results
-
+PROCEDURE created.
 */
 
--- TODO: Question #1b
-
-/* Question #1b Query Results
-
+-- NOTE: Question #1b
+/*
+You need to use the EXECUTE keyword to run a procedure.
 */
 
--- TODO: Question #1c
-
+-- NOTE: Question #1c
+execute hello_world ();
 /* Question #1c Query Results
-
+Hello World
 */
 
--- TODO: Question #1d
-
-/* Question #1d Query Results
-
+-- NOTE: Question #1d
+/*
+Named blocks are reusable while unnamed blocks are not.
 */
 
--- TODO: Question #2
-
-/* Question #2 Query Results
-
+-- NOTE: Question #2
+CREATE OR REPLACE PROCEDURE hello_world AS
+    v_output VARCHAR2 (35) := 'Hello World';
+BEGIN
+    dbms_output.put_line (v_output);
+END hello_world;
+/
+/*
+The result is the same because I have been formatting all of my blocks
 */
 
--- TODO: Question #3
-
-/* Question #3 Query Results
-
-*/
-
--- TODO: Question #3a
-
+-- NOTE: Question #3
+CREATE OR REPLACE PROCEDURE hello_world (
+    p_name IN VARCHAR2
+) AS
+    v_output VARCHAR2 (35);
+BEGIN
+    v_output := 'Hello ' || p_name;
+    dbms_output.put_line (v_output);
+END hello_world;
+/
+-- NOTE: Question #3a
+execute hello_world ('Ethan');
 /* Question #3a Query Results
-
+Hello Ethan
 */
 
--- TODO: Question #3b
-
+-- NOTE: Question #3b
+execute hello_world ('Mark.');
 /* Question #3b Query Results
-
+Hello Mark.
 */
 
--- TODO: Question #3c
-
+-- NOTE: Question #3c
+execute hello_world ('World procedure. I have so much fun coding in SQL and PLSQL.');
 /* Question #3c Query Results
+execute hello_world ('World procedure. I have so much fun coding in SQL and
+PLSQL.');
+*
 
+ERROR at line 292:
+ORA-06502: PL/SQL: numeric or value error: character string buffer too small
+ORA-06512: at "EZERONIK.HELLO_WORLD", line 6
+ORA-06512: at line 1
+
+It returns an error because the buffer var is too small
 */
 
--- TODO: Question #3d
-
-/* Question #3d Query Results
-
-*/
-
--- TODO: Question #3e
-
+-- NOTE: Question #3d
+CREATE OR REPLACE PROCEDURE hello_world (
+    p_name IN VARCHAR2
+) AS
+    v_output VARCHAR2 (85);
+BEGIN
+    v_output := 'Hello ' || p_name;
+    dbms_output.put_line (v_output);
+END hello_world;
+/
+-- NOTE: Question #3e
+execute hello_world ('World procedure. I have so much fun coding in SQL and PLSQL.');
 /* Question #3e Query Results
-
+Hello World procedure. I have so much fun coding in SQL and PLSQL.
 */
 
 -- NOTE: Question #4
@@ -337,64 +360,122 @@ execute hello_world ('Hello', NULL);
 Hello
 */
 
--- TODO: Question #5
-
+-- NOTE: Question #5
+CREATE OR REPLACE FUNCTION number_of_employees RETURN NUMBER AS
+    v_number_of_employees NUMBER := 0;
+BEGIN
+    SELECT COUNT ( * ) INTO v_number_of_employees
+    FROM employee;
+    RETURN v_number_of_employees;
+END number_of_employees;
+/
+BEGIN
+    dbms_output.put_line ('The function returns: ' || number_of_employees);
+END;
+/
 /* Question #5 Query Results
-
+The function returns: 40
 */
 
--- TODO: Question #6
-
-/* Question #6 Query Results
-
-*/
-
--- TODO: Question #6a
-
+-- NOTE: Question #6
+CREATE OR REPLACE FUNCTION number_of_employees (
+    p_jobtitle IN VARCHAR2
+) RETURN NUMBER AS
+    v_number_of_employees NUMBER := 0;
+BEGIN
+    SELECT COUNT ( * ) INTO v_number_of_employees
+    FROM employee
+    WHERE jobtitle = p_jobtitle;
+    RETURN v_number_of_employees;
+END number_of_employees;
+/
+-- NOTE: Question #6a
+DECLARE
+    v_jobtitle VARCHAR2 (35) := 'Engineer';
+BEGIN
+    dbms_output.put_line ('Number of ' || v_jobtitle || ': ' || number_of_employees (v_jobtitle) );
+END;
+/
 /* Question #6a Query Results
-
+Number of Engineer: 5
 */
 
--- TODO: Question #6b
-
-/* Question #6b Query Results
-
-*/
-
--- TODO: Question #6c
-
+-- NOTE: Question #6b
+CREATE OR REPLACE FUNCTION number_of_employees (
+    p_jobtitle IN employee.jobtitle%type
+) RETURN NUMBER AS
+    v_number_of_employees NUMBER := 0;
+BEGIN
+    SELECT COUNT ( * ) INTO v_number_of_employees
+    FROM employee
+    WHERE lower (jobtitle) = trim (lower (p_jobtitle) );
+    RETURN v_number_of_employees;
+END number_of_employees;
+/
+-- NOTE: Question #6c
+DECLARE
+    v_jobtitle VARCHAR2 (35) := 'engineer';
+BEGIN
+    dbms_output.put_line ('Number of ' || v_jobtitle || ': ' || number_of_employees (v_jobtitle) );
+END;
+/
 /* Question #6c Query Results
-
+Number of engineer: 5
 */
 
--- TODO: Question #6d
-
+-- NOTE: Question #6d
+DECLARE
+    v_jobtitle VARCHAR2 (35) := 'dba';
+BEGIN
+    dbms_output.put_line ('Number of ' || v_jobtitle || ': ' || number_of_employees (v_jobtitle) );
+END;
+/
 /* Question #6d Query Results
-
+Number of dba: 1
 */
 
--- TODO: Question #6e
-
+-- NOTE: Question #6e
+DECLARE
+    v_jobtitle VARCHAR2 (35) := 'DBA';
+BEGIN
+    dbms_output.put_line ('Number of ' || v_jobtitle || ': ' || number_of_employees (v_jobtitle) );
+END;
+/
 /* Question #6e Query Results
-
+Number of DBA: 1
 */
 
--- TODO: Question #6f
-
+-- NOTE: Question #6f
+DECLARE
+    v_jobtitle VARCHAR2 (35) := 'chief sales officer';
+BEGIN
+    dbms_output.put_line ('Number of ' || v_jobtitle || ': ' || number_of_employees (v_jobtitle) );
+END;
+/
 /* Question #6f Query Results
-
+Number of chief sales officer: 1
 */
 
--- TODO: Question #6g
-
+-- NOTE: Question #6g
+DECLARE
+    v_jobtitle VARCHAR2 (35) := '   chief sales officer   ';
+BEGIN
+    dbms_output.put_line ('Number of ' || v_jobtitle || ': ' || number_of_employees (v_jobtitle) );
+END;
+/
 /* Question #6g Query Results
-
+Number of    chief sales officer   : 1
 */
 
--- TODO: Question #6h
-
+-- NOTE: Question #6h
+DECLARE
+    v_jobtitle VARCHAR2 (35) := 'CEO';
+BEGIN
+    dbms_output.put_line ('Number of ' || v_jobtitle || ': ' || number_of_employees (v_jobtitle) );
+END;
+/
 /* Question #6h Query Results
-
+Number of CEO: 0
 */
 
 -- NOTE: Question #7a
@@ -407,10 +488,12 @@ BEGIN
     dbms_output.put_line (v_output);
 END days_away;
 /
--- TODO: Question #7b
-
+-- NOTE: Question #7b
+execute days_away (TO_DATE ('01-10-2022', 'DD-MM-YYYY') );
+execute days_away (TO_DATE ('03-10-2022', 'DD-MM-YYYY') );
 /* Question #7b Query Results
-
+-1.62289351851851851851851851851851851852 days away!
+.3771064814814814814814814814814814814815 days away!
 */
 
 -- NOTE: Question #8a
@@ -423,10 +506,12 @@ BEGIN
     dbms_output.put_line (v_output);
 END day_of_the_week;
 /
--- TODO: Question #8b
-
+-- NOTE: Question #8b
+execute day_of_the_week (TO_DATE ('01-07-2022', 'DD-MM-YYYY') );
+execute day_of_the_week (SYSDATE () );
 /* Question #8b Query Results
-
+THURSDAY  FRIDAY    SATURDAY !
+SATURDAY  SUNDAY    MONDAY   !
 */
 
 -- TODO: Question #9a
