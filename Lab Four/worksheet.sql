@@ -514,14 +514,24 @@ THURSDAY  FRIDAY    SATURDAY !
 SATURDAY  SUNDAY    MONDAY   !
 */
 
--- TODO: Question #9a
-
-/* Question #9a Query Results
-
-*/
-
--- TODO: Question #9b
-
+-- NOTE: Question #9a
+CREATE OR REPLACE PROCEDURE days_from_weekend (
+    p_date IN DATE DEFAULT sysdate ()
+) AS
+    v_day VARCHAR2 (25);
+BEGIN
+ -- set the day to a string
+    v_day := to_char (p_date, 'DY');
+ -- conditional
+    IF v_day IN ('SAT', 'SUN') THEN
+        dbms_output.put_line ('Happy Weekend!');
+    ELSE
+        dbms_output.put_line ('You are ' || (7 - CAST (to_char (p_date, 'd') AS number) ) || ' days away from the weekend');
+    END IF;
+END days_from_weekend;
+/
+-- NOTE: Question #9b
+execute days_from_weekend (TO_DATE ('03-10-2022', 'DD-MM-YYYY') );
 /* Question #9b Query Results
-
+You are 5 days away from the weekend
 */
