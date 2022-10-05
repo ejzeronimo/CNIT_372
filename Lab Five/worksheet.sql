@@ -377,3 +377,172 @@ execute print_employee_roster ('assembly');
 /*
 if there is an error it will be printed as "code: message"
 */
+
+-- NOTE: Question #7a
+CREATE OR REPLACE PROCEDURE customer_roster (
+    p_state IN customer.state%type
+) AS
+ -- cursor for the roster
+    CURSOR all_customers IS
+        SELECT companyname, city, state, custlastname || ', ' || custfirstname AS contact
+        FROM customer
+        WHERE upper (trim (state) ) = upper (trim (p_state) );
+ -- instance of cursor row type
+    current_customer all_customers%rowtype;
+BEGIN
+ -- print roster
+    OPEN all_customers;
+    FETCH all_customers INTO current_customer;
+    WHILE all_customers%found LOOP
+        dbms_output.put (rpad (current_customer.city, 15, ' ') );
+        dbms_output.put (rpad (current_customer.state, 10, ' ') );
+        dbms_output.put (rpad (current_customer.contact, 30, ' ') );
+        dbms_output.put_line (current_customer.companyname);
+        FETCH all_customers INTO current_customer;
+    END LOOP;
+    CLOSE all_customers;
+ -- exception handling
+EXCEPTION
+    WHEN OTHERS THEN
+        dbms_output.put (sqlcode);
+        dbms_output.put (': ');
+        dbms_output.put_line (substr (sqlerrm, 1, 100) );
+END customer_roster;
+/
+/**/
+
+-- NOTE: Question #7b
+execute customer_roster ('GA');
+/* Question #7b Query Results
+Athens         GA        Thompson, Jamie
+Macon          GA        Vanderhoff, Rosemary
+Nahunta        GA        Malady, Frank
+Adel           GA        Strong, Susan                 Family Medical Center
+Elberton       GA        Torres, Don                   Down Deep Drilling Inc.
+Swainsboro     GA        Osborne, Shirley
+*/
+
+-- NOTE: Question #8a
+CREATE OR REPLACE PROCEDURE customer_search (
+    p_name IN customer.custlastname%type
+) AS
+ -- cursor for the roster
+    CURSOR all_customers IS
+        SELECT companyname, custfirstname, custlastname, custtitle
+        FROM customer
+        WHERE upper (trim (custlastname) ) LIKE '%' || upper (trim (p_name) ) || '%';
+BEGIN
+ -- print roster
+    FOR current_customer IN all_customers LOOP
+        dbms_output.put (rpad (current_customer.custtitle, 8, ' ') );
+        dbms_output.put (rpad (current_customer.custfirstname, 15, ' ') );
+        dbms_output.put (rpad (current_customer.custlastname, 15, ' ') );
+        dbms_output.put_line (current_customer.companyname);
+    END LOOP;
+ -- exception handling
+EXCEPTION
+    WHEN OTHERS THEN
+        dbms_output.put (sqlcode);
+        dbms_output.put (': ');
+        dbms_output.put_line (substr (sqlerrm, 1, 100) );
+END customer_search;
+/
+/**/
+
+-- NOTE: Question #8b
+execute customer_search ('NA');
+/* Question #8b Query Results
+Dr.     Dorlan         Bresnaham
+Mr.     Jay            Hanau
+Mr.     Matt           Nakanishi
+Mr.     Jim            Manaugh
+Mr.     Daniel         Hundnall       Bobs Repair Service
+Ms.     Jessica        Nakamura       Automart
+*/
+
+-- NOTE: Question #8c
+CREATE OR REPLACE PROCEDURE customer_search (
+    p_name IN customer.custlastname%type
+) AS
+ -- cursor for the roster
+    CURSOR all_customers IS
+        SELECT companyname, custfirstname, custlastname, custtitle
+        FROM customer
+        WHERE upper (trim (custlastname) ) LIKE '%' || upper (trim (p_name) ) || '%' OR upper (trim (custfirstname) ) LIKE '%' || upper (trim (p_name) ) || '%';
+BEGIN
+ -- print roster
+    FOR current_customer IN all_customers LOOP
+        dbms_output.put (rpad (current_customer.custtitle, 8, ' ') );
+        dbms_output.put (rpad (current_customer.custfirstname, 15, ' ') );
+        dbms_output.put (rpad (current_customer.custlastname, 15, ' ') );
+        dbms_output.put_line (current_customer.companyname);
+    END LOOP;
+ -- exception handling
+EXCEPTION
+    WHEN OTHERS THEN
+        dbms_output.put (sqlcode);
+        dbms_output.put (': ');
+        dbms_output.put_line (substr (sqlerrm, 1, 100) );
+END customer_search;
+/
+/**/
+
+-- NOTE: Question #8d
+execute customer_search ('na');
+/* Question #8d Query Results
+Dr.     Dorlan         Bresnaham
+Ms.     Verna          McGrew
+Mrs.    Christina      Wilson
+Mr.     Jay            Hanau
+Mr.     Matt           Nakanishi
+Mrs.    Nancy          Basham
+Mr.     Jim            Manaugh
+Mr.     Jonathon       Blanco
+Mr.     Daniel         Hundnall       Bobs Repair Service
+Ms.     Jessica        Nakamura       Automart
+Dr.     Anna           Mayton
+Mr.     Ronald         Miller
+*/
+
+-- NOTE: Question #8e
+CREATE OR REPLACE PROCEDURE customer_search (
+    p_name IN customer.custlastname%type
+) AS
+BEGIN
+ -- print roster
+    FOR current_customer IN (
+        SELECT companyname, custfirstname, custlastname, custtitle
+        FROM customer
+        WHERE upper (trim (custlastname) ) LIKE '%' || upper (trim (p_name) ) || '%' OR upper (trim (custfirstname) ) LIKE '%' || upper (trim (p_name) ) || '%'
+    ) LOOP
+        dbms_output.put (rpad (current_customer.custtitle, 8, ' ') );
+        dbms_output.put (rpad (current_customer.custfirstname, 15, ' ') );
+        dbms_output.put (rpad (current_customer.custlastname, 15, ' ') );
+        dbms_output.put_line (current_customer.companyname);
+    END LOOP;
+ -- exception handling
+EXCEPTION
+    WHEN OTHERS THEN
+        dbms_output.put (sqlcode);
+        dbms_output.put (': ');
+        dbms_output.put_line (substr (sqlerrm, 1, 100) );
+END customer_search;
+/
+/**/
+
+-- NOTE: Question #8f
+execute customer_search ('na');
+/* Question #8f Query Results
+Dr.     Dorlan         Bresnaham
+Ms.     Verna          McGrew
+Mrs.    Christina      Wilson
+Mr.     Jay            Hanau
+Mr.     Matt           Nakanishi
+Mrs.    Nancy          Basham
+Mr.     Jim            Manaugh
+Mr.     Jonathon       Blanco
+Mr.     Daniel         Hundnall       Bobs Repair Service
+Ms.     Jessica        Nakamura       Automart
+Dr.     Anna           Mayton
+Mr.     Ronald         Miller
+*/
