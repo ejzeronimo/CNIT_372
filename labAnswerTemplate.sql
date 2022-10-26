@@ -11,7 +11,7 @@ Late hours used: [choose an integer between 0-30]
 
 /* [Non-query answers go here, please use comments] */
 
-/* Q1 Query Results
+/* Question #1 Query Results
 
 [Result goes here]
 
@@ -23,7 +23,7 @@ Late hours used: [choose an integer between 0-30]
 
 /* [Non-query answers go here, please use comments] */
 
-/* Q2 Query Results
+/* Question #2 Query Results
 
 [Result goes here]
 
