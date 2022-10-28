@@ -481,7 +481,7 @@ INSERT ALL
         SELECT (.25 * AVG (salarywage) ) FROM employee
     ) THEN INTO employee_bottom_25
     WHEN salarywage >= (
-        SELECT PERCENTILE_CONT (.1) WITHIN GROUP (ORDER BY salarywage DESC) FROM employee
+        SELECT (.9 * (MAX (salarywage) - MIN (salarywage) ) ) + MIN (salarywage) FROM employee
     ) THEN INTO employee_top_10 ELSE INTO employee_others
         SELECT employeeid, (firstname || ' ' || lastname) , jobtitle, salarywage
         FROM employee;
@@ -520,19 +520,19 @@ EMPLOYEE_ID	EMPLOYEE_NAME	JOB_TITLE	SALARY
 101166	Phil Reece	Assembly	10.5
 
 EMPLOYEE_ID	EMPLOYEE_NAME	JOB_TITLE	SALARY
-100103	Rita Bush	VP Operations	85800
-100206	Kathleen Xolo	VP Finance	80700
 100365	Sherman Cheswick	President	99900
 100650	Edna Lilley	VP Information	93900
 
 EMPLOYEE_ID	EMPLOYEE_NAME	JOB_TITLE	SALARY
 100001	Jim Manaugh	Chief Financial Officer	75500
+100103	Rita Bush	VP Operations	85800
 100104	Michael Abbott	Engineer	74400
 100106	Paul Eckelman	Accountant	53600
 100112	Steven Hickman	Programmer Analyst	57600
 100125	Gabrielle Stevenson	Chief Information Officer	75300
 100127	Jason Wendling	Operations Officer	65600
 100200	Beth Zobitz	Engineer	55200
+100206	Kathleen Xolo	VP Finance	80700
 100209	Tina Yates	Engineer	52000
 100330	Kristen Gustavel	Operations Officer	68800
 100488	Jamie Osman	Programmer Analyst	46300
@@ -583,10 +583,10 @@ INSERT ALL
         SELECT (.25 * AVG (salarywage) ) FROM employee
     ) THEN INTO employee_bottom_25
     WHEN salarywage >= (
-        SELECT PERCENTILE_CONT (.1) WITHIN GROUP (ORDER BY salarywage DESC) FROM employee
+        SELECT (.9 * (MAX (salarywage) - MIN (salarywage) ) ) + MIN (salarywage) FROM employee
     ) THEN INTO employee_top_10
     WHEN salarywage >= (
-        SELECT PERCENTILE_CONT (.02) WITHIN GROUP (ORDER BY salarywage DESC) FROM employee
+        SELECT (.98 * (MAX (salarywage) - MIN (salarywage) ) ) + MIN (salarywage) FROM employee
     ) THEN INTO employee_top_2 ELSE INTO employee_others
         SELECT employeeid, (firstname || ' ' || lastname) , jobtitle, salarywage
         FROM employee;
@@ -630,19 +630,19 @@ EMPLOYEE_ID	EMPLOYEE_NAME	JOB_TITLE	SALARY
 101166	Phil Reece	Assembly	10.5
 
 EMPLOYEE_ID	EMPLOYEE_NAME	JOB_TITLE	SALARY
-100103	Rita Bush	VP Operations	85800
-100206	Kathleen Xolo	VP Finance	80700
 100365	Sherman Cheswick	President	99900
 100650	Edna Lilley	VP Information	93900
 
 EMPLOYEE_ID	EMPLOYEE_NAME	JOB_TITLE	SALARY
 100001	Jim Manaugh	Chief Financial Officer	75500
+100103	Rita Bush	VP Operations	85800
 100104	Michael Abbott	Engineer	74400
 100106	Paul Eckelman	Accountant	53600
 100112	Steven Hickman	Programmer Analyst	57600
 100125	Gabrielle Stevenson	Chief Information Officer	75300
 100127	Jason Wendling	Operations Officer	65600
 100200	Beth Zobitz	Engineer	55200
+100206	Kathleen Xolo	VP Finance	80700
 100209	Tina Yates	Engineer	52000
 100330	Kristen Gustavel	Operations Officer	68800
 100488	Jamie Osman	Programmer Analyst	46300
@@ -693,11 +693,8 @@ FROM employee_top_10;
 2 rows merged.
 
 EMPLOYEE_ID	EMPLOYEE_NAME	JOB_TITLE	SALARY
-100103	Rita Bush	VP Operations	85800
-100206	Kathleen Xolo	VP Finance	80700
 100365	Sherman Cheswick	President	119880
 100650	Edna Lilley	VP Information	93900
-100365	Sherman Cheswick	President	119880
 */
 
 -- NOTE: Question #21
