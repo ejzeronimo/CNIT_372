@@ -1,0 +1,16 @@
+{
+    "Block Comment": {
+        "prefix": [
+            "q"
+        ],
+        "body": [
+            "-- TODO: Question #${1:1}",
+            "",
+            "/* Question #${1:1} Query Results",
+            "",
+            "*/",
+            "",
+        ],
+        "description": "Default header for lab"
+    }
+}
