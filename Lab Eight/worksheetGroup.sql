@@ -89,7 +89,6 @@ SUPERVISORID	NUMEMPLOYEES
 -- NOTE: Question #b6
 SELECT *
 FROM kim2379.supervisor;
-/
 /* Question #b6 Query Results
 I do not see the change because the update has not been commited
 
@@ -112,7 +111,6 @@ SUPERVISORID	NUMEMPLOYEES
 
 -- NOTE: Question #b7
 COMMIT;
-/
 /* Question #b7 Query Results
 I see the new employee because I put new employee in my view and I have a privilege on my view
 
@@ -123,7 +121,6 @@ Commit complete.
 -- NOTE: Question #b8
 SELECT *
 FROM kim2379.supervisor;
-/
 /* Question #b8 Query Results
 It works because now the change has been committed
 
@@ -149,7 +146,6 @@ SUPERVISORID	NUMEMPLOYEES
 DELETE FROM employee
 WHERE
     supervisor = '100000';
-/
 /* Question #b9 Query Results
 1 row deleted.
 */
@@ -178,7 +174,6 @@ SUPERVISORID	NUMEMPLOYEES
 -- NOTE: Question #b11
 SELECT *
 FROM kim2379.supervisor;
-/
 /* Question #b11 Query Results
 Yes I still see it because my partner has not commited the change yet
 
@@ -202,7 +197,6 @@ SUPERVISORID	NUMEMPLOYEES
 
 -- NOTE: Question #b12
 REVOKE READ ON supervisor FROM ezeronik;
-/
 /* Question #b12 Query Results
 Revoke succeeded.
 */
@@ -210,7 +204,6 @@ Revoke succeeded.
 -- NOTE: Question #b13
 SELECT *
 FROM kim2379.supervisor;
-/
 /* Question #b13 Query Results
 I get the error because I have had my permission removed, but it is misleading as it implies the view was deleted
 
@@ -222,7 +215,6 @@ ORA-00942: table or view does not exist
 
 -- NOTE: Question #b14
 DROP VIEW supervisor;
-/
 /* Question #b14 Query Results
 View SUPERVISOR dropped.
 */
