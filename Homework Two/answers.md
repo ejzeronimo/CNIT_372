@@ -33,10 +33,6 @@ Write a procedure to find the total amount of money spent by a given company.
 
 ### Query for create and populate the example table:
 ```sql
-CREATE TABLE customer_copy AS
-    SELECT *
-    FROM customer;
-
 CREATE TABLE custorder_copy AS
     SELECT *
     FROM custorder;

@@ -14,7 +14,6 @@ FROM customer_copy
 WHERE companyname = 'Baker and Company';
 --
 
-
 SELECT orderid
 FROM custorder_copy
 WHERE customerid IN (
