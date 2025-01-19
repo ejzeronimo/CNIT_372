@@ -10,12 +10,12 @@ Please do not use these labs as your own, I answered all of these questions myse
 *I will try to go back and update questions that were incorrect.*
 
 ### Labs
-The lab folder should be structred as follows:
+The lab folder should be structured as follows:
 - Lab #
   - *.pdf
   - worksheet.sql
 
-Any included pdfs wre provided from class and represent the requirements for the lab.  **Worksheet.sql** contains my answers to the questions provided by lab.
+Any included pdfs were provided from class and represent the requirements for the lab.  **Worksheet.sql** contains my answers to the questions provided by lab.
 
 ## Prerequisites
 This assumes the use of an **Oracle SQL DB** and the use of some PL/SQL IDE like [sqldeveloper](https://www.oracle.com/database/sqldeveloper/technologies/download/).
